@@ -1,34 +1,42 @@
-(function($)
-{
-    $.fn.tableJs=function(options)
-    {
+(function ($) {
+    $.fn.tableJs = function (options) {
         var defaults =
             {
                 // attributs
-                linesTitle:[{
-                    title:'colone 1',
-                    name:'columOne'
+                linesTitle: [{
+                    title: 'colone 1',
+                    name: 'columOne'
                 }],
-                data:[],
+                data: [],
+                method: '',
                 // methodes
-                'createTable' : function(thisPlugin)
-                {
+                'createTable': function (that) {
                     // construction du tableau
-                    var table ="<table ";
-                    if(params.idName) table+= " id='" + params.idName + "'";
-                    if(params.className) table+= " class='" + params.className + "'";
-                    table+= ">";
-                    $.each(params.linesTitle, function(key, value){
-                        table+= '<tr>';
-                        table+= '<th>'+value.title+'</th>';
-                        $.each(params.data, function(index, data){
-                            table+= '<th>'+data[value.name]+'</th>';
-                        });
-                        table+= '</tr>';
-                    });
+                    var $table = $('<table/>');
+                    $table.append('<tbody/>');
 
-                    table+= "</table>";
-                    thisPlugin.html(table);
+                    params.idName && $table.prop('id', params.idName);
+                    params.className && $table.addClass(params.className);
+                    $.each(params.linesTitle, function (key, value) {
+                        var $tr = $('<tr/>');
+                        $tr.append(
+                            $('<th/>', {text: value.title}
+                            )
+                        );
+
+                        $.each(params.data, function (index, data) {
+                            $tr.append(
+                                $('<td/>', {text: data[value.name]})
+                            )
+                        });
+
+                        $table.find('tbody').append($tr);
+
+                    });
+                    that.append($table);
+                },
+                addLines: function (that) {
+
                 }
 
 
@@ -37,32 +45,16 @@
         // Fusion defaults & options
         var params = $.extend(defaults, options);
         // On applique a tous les objets concernés
-        return this.each(function()
-        {
-            // si aucun tableau existe, creation du tableau
+        return this.each(function () {
+            // si l'enfant est de type table alors le tableau est déjà creer, sinon on le créer
+            if ($(this).children().is('table')) {
+                console.log('edit');
+                if (params.method === 'addLines') params.addLines($(this));
 
-            if(! $(this).chidren)
-            {
+            } else {
+                console.log('create');
                 params.createTable($(this));
-            }else
-            {
 
-                //sinon modification du tableau
-                //je cherche le table
-                var table = $(this);
-
-                // appel des setters
-                //if(appel des attributs)	appel des setter
-                if(params.css)				params.setCss(table);
-                if(params.cssFirstLine) 	params.setCssFirstLine(table);
-                if(params.cssFirstColumn) 	params.setCssFirstColumn(table);
-                //si un tableau existe
-                if(params.cssLastColumn) 	params.setCssLastColumn(table);
-                if(params.cssLastLine) 		params.setCssLastLine(table);
-                if(params.titles)			params.addtitle(table);
-                if(params.textCell)			params.addTextCell(table);
-                // callback
-                if(params.callback) 		params.callback();
             }
         });
     };

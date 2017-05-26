@@ -46,14 +46,46 @@
         ],
         data: [
             {
-                firstName: 'Eva',
-                lastName: 'Roux',
+                firstName: 'Arno',
+                lastName: 'Lacharité',
                 age: '26'
             },
             {
-                firstName: 'Jonathan',
-                lastName: 'Dufresne',
+                firstName: 'Colette',
                 age: '28'
+            },
+            {
+                firstName: 'Wyatt',
+                lastName: 'Mercure'
+
+            },
+            {
+                firstName: 'Felicien',
+                lastName: 'Bonsaint',
+                age: '22'
+            }
+        ]
+    });
+
+    $('#js_tableJs').tableJs({
+        method: 'addLines',
+        linesTitle: [
+            {
+                title: 'Genre',
+                name: 'sexe'
+            },
+            {
+                title: 'Pilosité',
+                name: 'hair'
+            }
+        ],
+        data: [
+            {
+                sexe: 'Femme'
+            },
+            {
+                sexe: 'Homme',
+                hair: 'Barbe'
             }
         ]
     });
