@@ -35,8 +35,23 @@
                     });
                     that.append($table);
                 },
-                addLines: function (that) {
+                addLines: function ($table) {
+                    $.each(params.linesTitle, function (key, value) {
+                        var $tr = $('<tr/>');
+                        $tr.append(
+                            $('<th/>', {text: value.title}
+                            )
+                        );
 
+                        $.each(params.data, function (index, data) {
+                            $tr.append(
+                                $('<td/>', {text: data[value.name]})
+                            )
+                        });
+
+                        $table.append($tr);
+
+                    });
                 }
 
 
@@ -49,7 +64,7 @@
             // si l'enfant est de type table alors le tableau est déjà creer, sinon on le créer
             if ($(this).children().is('table')) {
                 console.log('edit');
-                if (params.method === 'addLines') params.addLines($(this));
+                if (params.method === 'addLines') params.addLines($(this).children());
 
             } else {
                 console.log('create');
