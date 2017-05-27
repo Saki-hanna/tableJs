@@ -131,15 +131,26 @@
         data:[{id:1},{id:2},{id:3},{id:4}]
     });
 
-    //add data for colette and adress
+    //edit colette (id:2)
     $('#js_tableJs').tableJs({
-        method:{name:'addData', params:{id:2}},
+        method:{name:'editData', params:{id:2}},
         data:
             {
                 hair: {dataText:'drue', dataAttr:{'class':'text-warning'}},
                 address: {dataText:'30 rue Jean Valjean', dataAttr:{'class':'text-primary'}}
             }
 
+    });
+
+    //add columns
+    $('#js_tableJs').tableJs({
+        method:{name:'newData'},
+        data: {
+                age: {dataText:'42'},
+                firstName:{dataText:'Martin'},
+                address: {dataText:'19 rue Jean-Jaures'},
+                hair: {dataText:'Poilue'}
+        }
     });
 </script>
 </html>
