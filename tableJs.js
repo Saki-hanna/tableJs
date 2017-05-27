@@ -10,27 +10,31 @@
                 data: [],
                 method: '',
                 // methodes
-                'createTable': function (that) {
+                createTable: function (that) {
                     // construction du tableau
                     var $table = $('<table/>');
+                    $table.append('<thead/>');
                     $table.append('<tbody/>');
+                    $table.append('<tfoot/>');
 
                     params.idName && $table.prop('id', params.idName);
                     params.className && $table.addClass(params.className);
-                    params._addLines($table.find('tbody'));
+                    params._addLines($table, true);
 
                     that.append($table);
                 },
                 addLines: function ($table) {
-                    params._addLines($table);
+                    params._addLines($table, false);
                 },
                 newData: function ($table) {
                     $.each($table.find('tr'), function (i, tr) {
                         $tr = $(tr);
-                        $td = $('<td/>');
+                        $td = ($tr.parent().is('thead') && i === 0) ? $('<th/>') : $('<td/>');
+
                         $.each(params.data, function (lineTitle, data) {
                             if ($tr.children().data('title') === lineTitle) {
                                 $td.text(data.dataText);
+                                (data.dataAttr) && $td.attr(data.dataAttr);
                             }
                         });
                         $tr.append($td);
@@ -40,16 +44,16 @@
                     var lat = allparams.id;
                     $.each(params.data, function (long, data) {
                         $.each($table.find('td'), function (i, td) {
+                            $td = $(td);
 
-                            if ($(td).data('long') === long && $(td).data('lat') === lat) {
-                                $(td).text(data.dataText);
-                                (data.dataAttr) && $(td).attr(data.dataAttr);
-                                return;
+                            if ($td.data('long') === long && $td.data('lat') === lat) {
+                                $td.text(data.dataText);
+                                (data.dataAttr) && $td.attr(data.dataAttr);
                             }
                         });
                     });
                 },
-                _addLines: function ($table) {
+                _addLines: function ($table, create) {
                     $.each(params.linesTitle, function (key, value) {
                         var $tr = $('<tr/>');
                         $tr.append(
@@ -61,16 +65,8 @@
                         );
 
                         $.each(params.data, function (index, data) {
-                            if (data[value.name]) {
-                                textValue = data[value.name].dataText;
-                            } else {
-                                textValue = '';
-                            }
-                            if (data[value.name] && data[value.name].isTitle) {
-                                element = '<th/>';
-                            } else {
-                                element = '<td/>';
-                            }
+                            textValue = (data[value.name])? data[value.name].dataText : '';
+                            element = (create && key === 0 && params.hasHeader)?'<th/>':'<td/>';
 
                             cell = $(element, {
                                 text: textValue,
@@ -84,7 +80,12 @@
                             $tr.append(cell)
                         });
 
-                        $table.append($tr);
+                        if (create) {
+                            tElement = (key === 0 && params.hasHeader)? 'thead' : 'tbody';
+                            $table.find(tElement).append($tr);
+                        } else {
+                            $table.append($tr);
+                        }
 
                     });
                 }
