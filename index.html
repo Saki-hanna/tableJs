@@ -21,6 +21,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
+
+    <style>
+        #myId{
+            color:red;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -42,7 +48,7 @@
 </body>
 <script src="tableJs.js"></script>
 <script>
-
+    //Fist Step : Générate table in colunms
     $('#js_tableJs').tableJs({
         className: 'table table-striped table-hover',
         linesTitle: [
@@ -61,29 +67,33 @@
         ],
         data: [
             {
-                firstName: 'Arno',
-                lastName: 'Lacharité',
-                age: '26'
+                id:1,
+                firstName: {isTitle:true, dataText:'Arno'},
+                lastName: {dataText:'Lacharité'},
+                age: {dataText:'26'}
             },
             {
-                firstName: 'Colette',
-                age: '28'
+                id:2,
+                firstName: {dataText:'Colette'},
+                age: {dataText:'28'}
             },
             {
-                firstName: 'Wyatt',
-                lastName: 'Mercure'
+                id:3,
+                firstName: {dataText:'Wyatt'},
+                lastName: {dataText:'Mercure', dataAttr:{'class':'text-warning'}}
 
             },
             {
-                firstName: 'Felicien',
-                lastName: 'Bonsaint',
-                age: '22'
+                id:4,
+                firstName: {dataText:'Felicien', dataAttr:{'id':'myId'}},
+                lastName: {dataText:'Bonsaint'},
+                age: {dataText:'22'}
             }
         ]
     });
-
+    // step two : addLines with data
     $('#js_tableJs').tableJs({
-        method: 'addLines',
+        method: {name:'addLines'},
         linesTitle: [
             {
                 title: 'Genre',
@@ -96,15 +106,40 @@
         ],
         data: [
             {
-                sexe: 'Femme'
+                id:1,
+                sexe: {title:true, dataText:'Femme'}
             },
-            {},
+            {id:2},
             {
-                sexe: 'Homme',
-                hair: 'Barbe'
+                id:3,
+                sexe: {dataText:'Homme'},
+                hair: {dataText:'Barbe'}
             },
-            {}
+            {id:4}
         ]
+    });
+
+    //step tree : add lines then add data
+    $('#js_tableJs').tableJs({
+        method: {name:'addLines'},
+        linesTitle: [
+            {
+                title: 'Adresse',
+                name: 'address'
+            }
+        ],
+        data:[{id:1},{id:2},{id:3},{id:4}]
+    });
+
+    //add data for colette and adress
+    $('#js_tableJs').tableJs({
+        method:{name:'addData', params:{id:2}},
+        data:
+            {
+                hair: {dataText:'drue', dataAttr:{'class':'text-warning'}},
+                address: {dataText:'30 rue Jean Valjean', dataAttr:{'class':'text-primary'}}
+            }
+
     });
 </script>
 </html>

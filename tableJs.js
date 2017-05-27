@@ -17,25 +17,27 @@
 
                     params.idName && $table.prop('id', params.idName);
                     params.className && $table.addClass(params.className);
-                    $.each(params.linesTitle, function (key, value) {
-                        var $tr = $('<tr/>');
-                        $tr.append(
-                            $('<th/>', {text: value.title}
-                            )
-                        );
+                    params._addLines($table.find('tbody'));
 
-                        $.each(params.data, function (index, data) {
-                            $tr.append(
-                                $('<td/>', {text: data[value.name]})
-                            )
-                        });
-
-                        $table.find('tbody').append($tr);
-
-                    });
                     that.append($table);
                 },
                 addLines: function ($table) {
+                    params._addLines($table);
+                },
+                addDatas:function($table, allparams){
+                    var lat = allparams.id;
+                    $.each(params.data, function (long, data) {
+                            $.each($table.find('td'), function (i, td) {
+
+                                if($(td).data('long') === long && $(td).data('lat') === lat){
+                                    $(td).text(data.dataText);
+                                    (data.dataAttr) && $(td).attr(data.dataAttr);
+                                    return;
+                                }
+                            });
+                    });
+                },
+                _addLines:function($table){
                     $.each(params.linesTitle, function (key, value) {
                         var $tr = $('<tr/>');
                         $tr.append(
@@ -44,9 +46,27 @@
                         );
 
                         $.each(params.data, function (index, data) {
-                            $tr.append(
-                                $('<td/>', {text: data[value.name]})
-                            )
+                            if(data[value.name]) {
+                                textValue = data[value.name].dataText;
+                            }else{
+                                textValue = '';
+                            }
+                            if(data[value.name] && data[value.name].isTitle) {
+                                element = '<th/>';
+                            }else{
+                                element = '<td/>';
+                            }
+
+                            cell = $(element, {
+                                text: textValue,
+                                'data-long':value.name,
+                                'data-lat':data.id
+                            });
+
+                            (data[value.name] && data[value.name].dataAttr) && cell.attr(data[value.name].dataAttr);
+
+
+                            $tr.append(cell)
                         });
 
                         $table.append($tr);
@@ -63,11 +83,13 @@
         return this.each(function () {
             // si l'enfant est de type table alors le tableau est déjà creer, sinon on le créer
             if ($(this).children().is('table')) {
-                console.log('edit');
-                if (params.method === 'addLines') params.addLines($(this).children());
+                if(params.method){
+                    (params.method.name === 'addLines') && params.addLines($(this).children());
+                    (params.method.name === 'addData' && params.method.params) && params.addDatas($(this).children(), params.method.params);
+                }
+
 
             } else {
-                console.log('create');
                 params.createTable($(this));
 
             }
