@@ -30,12 +30,16 @@
                     $.each($table.find('tr'), function (i, tr) {
                         $tr = $(tr);
                         $td = ($tr.parent().is('thead') && i === 0) ? $('<th/>') : $('<td/>');
-
+                        $td.attr({
+                            'data-long': $tr.children().data('title'),
+                            'data-lat': params.data.id
+                        });
                         $.each(params.data, function (lineTitle, data) {
                             if ($tr.children().data('title') === lineTitle) {
                                 $td.text(data.dataText);
                                 (data.dataAttr) && $td.attr(data.dataAttr);
                             }
+
                         });
                         $tr.append($td);
                     });
